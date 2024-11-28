@@ -1,0 +1,145 @@
+#min-price,
+#max-price {
+  border: 1px solid black;
+  outline: none;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.category-select {
+  padding: 10px 30px 10px 12px;
+  font-size: 16px;
+  font-family: "Arial", sans-serif;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  appearance: none;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.category-select:hover,
+.category-select:focus {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.category-select::after {
+  content: "\2193";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.category-select option {
+  font-size: 16px;
+  padding: 10px;
+}
+
+.category-select option:checked {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.brand-filter {
+  position: relative;
+}
+
+.brand-selector {
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 280px;
+}
+
+.brand-selector p {
+  font-size: 16px;
+  color: #333;
+}
+
+.arrow {
+  font-size: 16px;
+  color: #333;
+}
+
+.brand-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 280px;
+  z-index: 100;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.brand-item {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.brand-item:hover {
+  background-color: #f0f0f0;
+}
+
+.brand-item img {
+  margin-right: 8px;
+}
+
+.brand-item span {
+  font-size: 16px;
+  color: #333;
+}
+
+.brand-dropdown {
+  transition: all 0.3s ease-in-out;
+}
+
+@media screen and (min-width: 800px) and (max-width: 1024px) {
+  #products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 375px) and (max-width: 799px) {
+  #products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nothing-found {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1.25rem;
+  font-weight: 500;
+  padding: 20px;
+  margin-top: 70px;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

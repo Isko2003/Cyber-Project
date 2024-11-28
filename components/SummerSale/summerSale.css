@@ -1,0 +1,10 @@
+.summer-sale {
+  background: linear-gradient(100.23deg, #2e2e2e 42.36%, #000000 98.65%);
+  width: 100%;
+}
+.right-banner .iphone-pro {
+  height: 250px !important;
+  width: 100px !important;
+  transform: rotate(-45deg);
+  overflow: hidden;
+}
