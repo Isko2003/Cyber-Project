@@ -5,10 +5,10 @@ import "./smartphones.css";
 import { CiHeart } from "react-icons/ci";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "@/pages/Button";
 import { smartPhonesData } from "@/mock/smartphonesData";
 import samsungLogo from "../../public/imgs/samsungLogo.png";
 import appleLogo from "../../public/imgs/appleLogo.jpeg";
+import { useCart } from "react-use-cart";
 
 const smartphones = () => {
   const [minPrice, setMinPrice] = useState("");
@@ -18,6 +18,7 @@ const smartphones = () => {
   const [color, setColor] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [showBrandMenu, setShowBrandMenu] = useState(false);
+  const { addItem } = useCart();
 
   const handleMinPrice = (e) => {
     setMinPrice(e.target.value);
@@ -188,9 +189,8 @@ const smartphones = () => {
                     <CiHeart className="text-xl cursor-pointer" />
                   </span>
                   <div className="product-img flex justify-center">
-                    <Image
+                    <img
                       src={item.img}
-                      unoptimized
                       alt={item.title.slice(0, 6)}
                       width={120}
                       height={140}
@@ -202,10 +202,15 @@ const smartphones = () => {
                   <div className="w-[230px] flex justify-center">
                     <p>${item.price}</p>
                   </div>
+                    </Link>
                   <div className="align-bottom flex justify-center">
-                    <Button />
+                    <button
+                      className="w-[130px] h-[40px] bg-black rounded-[8px] text-white p-3 hover:bg-slate-300 hover:text-black"
+                      onClick={() => addItem(item)}
+                    >
+                      Buy Now
+                    </button>
                   </div>
-                </Link>
               </div>
             ))
           ) : (

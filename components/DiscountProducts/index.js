@@ -1,11 +1,12 @@
+"use client";
 import React from "react";
 import "./discountProducts.css";
 import { CiHeart } from "react-icons/ci";
-import Image from "next/image";
-import Button from "@/pages/Button";
 import { discountProducts } from "@/mock/discountData";
 import Link from "next/link";
+import { useCart } from "react-use-cart";
 const DiscountProducts = () => {
+  const { addItem } = useCart();
   return (
     <section className="py-10">
       <div className="w-[75%] mx-auto py-2">
@@ -25,12 +26,11 @@ const DiscountProducts = () => {
                   <CiHeart className="text-xl cursor-pointer" />
                 </span>
                 <div className="product-img flex justify-center">
-                  <Image
+                  <img
                     src={item.img}
-                    unoptimized
                     alt={item.title.slice(0, 6)}
                     width={120}
-                    height={120}
+                    height={140}
                   />
                 </div>
                 <div className="w-[230px] h-[50px] flex justify-center items-center text-center">
@@ -39,10 +39,15 @@ const DiscountProducts = () => {
                 <div className="w-[230px] flex justify-center">
                   <p>${item.price}</p>
                 </div>
-                <div className="align-bottom flex justify-center">
-                  <Button />
-                </div>
               </Link>
+              <div className="align-bottom flex justify-center">
+                <button
+                  className="w-[130px] h-[40px] bg-black rounded-[8px] text-white p-3 hover:bg-slate-300 hover:text-black"
+                  onClick={() => addItem(item)}
+                >
+                  Buy Now
+                </button>
+              </div>
             </div>
           ))}
         </div>

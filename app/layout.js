@@ -1,17 +1,17 @@
+"use client"
 import Footer from "@/components/Footer";
 import Header from "../components/Header";
 import "./globals.css";
-import { Provider, useDispatch } from "react-redux";
-import { store } from "@/redux/store";
+import { CartProvider } from "react-use-cart";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Header />
-        <Provider store={store}>
+        <CartProvider id="products">
+          <Header />
           <main>{children}</main>
-        </Provider>
-        <Footer />
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

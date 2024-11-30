@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import logo from "../../public/imgs/logo.png";
 import "./header.css";
@@ -10,21 +10,26 @@ import { MdOutlineShoppingCart } from "react-icons/md";
 import { FiUser } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import { IoMdPhonePortrait } from "react-icons/io";
-import { useSelector } from "react-redux";
+import { useCart } from "react-use-cart";
 
 const Header = () => {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const { cartItems } = useSelector((state) => state.cart);
+  const { totalUniqueItems } = useCart();
+
+  useEffect(() => {
+    setTotalItems(totalUniqueItems);
+  }, [totalUniqueItems]);
 
   return (
-    <div>
-      <div className="w-[85%] mx-auto h-[70px] pt-[20px] flex items-center justify-between header">
+    <div className="pt-[70px] bg-white">
+      <div className="w-[85%] mx-auto h-[70px] pt-[20px] flex items-center justify-between header fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="logo">
           <Link href={"/"}>
             <Image
@@ -82,17 +87,21 @@ const Header = () => {
         </div>
         <div className="icons flex gap-[10px] hidden lg:flex">
           <div>
-            <CiHeart className="icon text-xl cursor-pointer" />
+            <CiHeart className="icon text-2xl cursor-pointer" />
           </div>
-          <div className="relative">
-            <MdOutlineShoppingCart className="icon text-xl cursor-pointer" />
-            <span className="absolute">
-              {cartItems.reduce((a, c) => a + c.qty, 0)}
-            </span>
-          </div>
-          <div>
-            <FiUser className="icon text-xl cursor-pointer" />
-          </div>
+          <Link href={"/basket"}>
+            <div className="relative">
+              <MdOutlineShoppingCart className="icon text-2xl cursor-pointer" />
+              <span className="absolute top-[-17px] right-[-8px] bg-yellow-600 rounded-full p-0 m-0 w-[18px] text-center">
+                {totalItems}
+              </span>
+            </div>
+          </Link>
+          <Link href={"/register"}>
+            <div>
+              <FiUser className="icon text-2xl cursor-pointer" />
+            </div>
+          </Link>
         </div>
         {/* HAMBURGER MENU */}
         <div
