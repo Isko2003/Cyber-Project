@@ -9,31 +9,31 @@ export const categoryData = [
   {
     id: 1,
     icon: <IoMdPhonePortrait className="text-xl" />,
-    title: "Phones",
+    title: "phones",
   },
   {
     id: 2,
     icon: <IoWatchSharp className="text-xl" />,
-    title: "Smart Watches",
+    title: "smartWatches",
   },
   {
     id: 3,
     icon: <LiaCameraSolid className="text-xl" />,
-    title: "Cameras",
+    title: "cameras",
   },
   {
     id: 4,
     icon: <CiHeadphones className="text-xl" />,
-    title: "HeadPhones",
+    title: "headphones",
   },
   {
     id: 5,
     icon: <RiComputerLine className="text-xl" />,
-    title: "Computers",
+    title: "computers",
   },
   {
     id: 6,
     icon: <IoGameControllerOutline className="text-xl" />,
-    title: "Gaming",
+    title: "gaming",
   },
 ];

@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import "./smallerbanners.css";
 import Image from "next/image";
 import PS5 from "../../public/imgs/playstation.png";
@@ -7,8 +8,15 @@ import Vrglass from "../../public/imgs/vrglass.png";
 import Macbook from "../../public/imgs/macbook.png";
 import SecondButton from "@/pages/SecondButton";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const SmallerBanners = () => {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    i18n.changeLanguage(savedLanguage);
+  }, []);
   return (
     <section className="banners flex flex-col lg:flex-row justify-between items-center p-4 lg:p-8">
       <div className="left-banners w-full lg:w-[50%] space-y-6 lg:space-y-8">
@@ -22,8 +30,7 @@ const SmallerBanners = () => {
               Playstation 5
             </h1>
             <p className="font-medium text-[12px] md:text-[14px] text-gray-500">
-              Incredibly powerful CPUs, GPUs, and an SSD with integrated I/O
-              will redefine your PlayStation experience.
+              {t("playstation5")}
             </p>
           </div>
         </div>
@@ -43,7 +50,7 @@ const SmallerBanners = () => {
                 Apple Airpods <strong>Max</strong>
               </h4>
               <p className="font-medium text-[12px] md:text-[14px] text-gray-500">
-                Computational audio. Listen, it's powerful.
+                {t("airpods")}
               </p>
             </div>
           </div>
@@ -64,7 +71,7 @@ const SmallerBanners = () => {
                 Apple Vision <strong>Pro</strong>
               </h4>
               <p className="font-medium text-[12px] md:text-[14px] text-gray-400">
-                An immersive way to experience entertainment.
+                {t("visionPro")}
               </p>
             </div>
           </div>
@@ -77,12 +84,13 @@ const SmallerBanners = () => {
             Macbook <strong>Air</strong>
           </h1>
           <p className="font-medium text-[12px] md:text-[14px]">
-            The new 15‑inch MacBook Air makes room for more of what you love
-            with a spacious Liquid Retina display.
+            {t("macbook")}
           </p>
           <div className="shop-btn">
             <Link href={"/smartphones"}>
-              <SecondButton />
+              <button className="bg-transparent border-2 border-black w-[140px] md:w-[140px] h-[35px] md:h-[40px] text-black hover:border-white transition duration-500 ease-linear">
+                {t("shopNow")}
+              </button>
             </Link>
           </div>
         </div>

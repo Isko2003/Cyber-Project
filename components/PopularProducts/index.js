@@ -1,16 +1,23 @@
+"use client";
 import { bannersData } from "@/mock/bannersData";
-import SecondButton from "@/pages/SecondButton";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 const PopularProducts = () => {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    i18n.changeLanguage(savedLanguage);
+  }, []);
   return (
     <section>
       <div className="flex flex-wrap justify-center items-center w-[75%] mx-auto lg:flex lg:flex-row lg:flex-nowrap">
         {bannersData.map((product, index) => (
           <div
             key={index}
-            className="product-box w-[300px] border border-gray-100 rounded-[8px] xlg:w-[250px]"
+            className="product-box w-[250px] border border-gray-100 rounded-[8px] xlg:w-[250px]"
           >
             <div className="product-img h-[170px] flex justify-center">
               <Image
@@ -22,16 +29,18 @@ const PopularProducts = () => {
               />
             </div>
             <div className="product-title px-4 py-3">
-              <h1 className="text-[30px] font-[300] w-[226px]">
-                {product.title}
+              <h1 className="text-[26px] font-[300] w-[230px]">
+                {t(product.title)}
               </h1>
             </div>
             <div className="product-desc px-4 py-3">
-              <p className="text-[#909090]">{product.desc}</p>
+              <p className="text-[#909090]">{t(product.desc)}</p>
             </div>
             <div className="product-btn px-4 py-3">
               <Link href={"/smartphones"}>
-                <SecondButton />
+                <button className="bg-transparent border-2 border-black w-[140px] md:w-[140px] h-[35px] md:h-[40px] text-black hover:border-white transition duration-500 ease-linear">
+                  {t("shopNow")}
+                </button>
               </Link>
             </div>
           </div>

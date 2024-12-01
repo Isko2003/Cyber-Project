@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import "./summerSale.css";
 import Image from "next/image";
 import Notepad from "../../public/imgs/notepad.png";
@@ -8,8 +9,15 @@ import IPhonePro from "../../public/imgs/IPhonePro.png";
 import GoldMacbook from "../../public/imgs/goldMacbook.png";
 import ThirdButton from "@/pages/ThirdButton";
 import Link from "next/link";
+import { useTranslation } from "react-i18next";
 
 const SummerSale = () => {
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    i18n.changeLanguage(savedLanguage);
+  }, []);
   return (
     <section className="summer-sale xlg:h-[348px] h-[600px]">
       <div className="relative flex flex-col items-center justify-between xlg:flex-row xlg:justify-between xlg:items-center overflow-x-hidden h-[100%] overflow-y-hidden">
@@ -45,15 +53,17 @@ const SummerSale = () => {
         <div className="content">
           <span>
             <h1 className="text-white text-center text-[50px] font-[300]">
-              Big Summer <strong>Sale</strong>
+              {t("bigSummer")} <strong>{t("sale")}</strong>
             </h1>
           </span>
           <p className="text-gray-400 text-[11px] text-center">
-            Commodo fames vitae vitae leo mauris in. Eu consequat.
+            {t("commodo")}
           </p>
           <div className="py-4 flex justify-center">
             <Link href={"/smartphones"}>
-              <ThirdButton />
+              <button className="bg-transparent border-2 border-white w-[120px] md:w-[140px] h-[35px] md:h-[40px] text-white hover:border-black transition duration-500 ease-linear">
+                {t("shopNow")}
+              </button>
             </Link>
           </div>
         </div>

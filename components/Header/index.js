@@ -11,11 +11,27 @@ import { FiUser } from "react-icons/fi";
 import { usePathname } from "next/navigation";
 import { IoMdPhonePortrait } from "react-icons/io";
 import { useCart } from "react-use-cart";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
+  const { t, i18n } = useTranslation();
+
+  const handleChangeLanguage = (event) => {
+    const selectedLang = event.target.value;
+    localStorage.setItem("language", selectedLang);
+    i18n.changeLanguage(selectedLang.toLowerCase());
+  };
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    if (savedLanguage) {
+      i18n.changeLanguage(savedLanguage);
+    }
+    
+  }, [i18n]);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -29,7 +45,7 @@ const Header = () => {
 
   return (
     <div className="pt-[70px] bg-white">
-      <div className="w-[85%] mx-auto h-[70px] pt-[20px] flex items-center justify-between header fixed top-0 left-0 right-0 z-50 bg-white">
+      <div className="w-[100%] mx-auto h-[70px] pt-[20px] flex items-center justify-around header fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="logo">
           <Link href={"/"}>
             <Image
@@ -44,7 +60,7 @@ const Header = () => {
         <div className="search-field relative hidden lg:flex">
           <input
             type="text"
-            placeholder="Search"
+            placeholder={t("search")}
             className="search-input outline-none rounded-[8px] p-[7px] w-[300px] h-[40px] z-[1]"
           />
           <div className="absolute top-3 left-[7px] text-white magn-glass">
@@ -57,7 +73,7 @@ const Header = () => {
               href={"/"}
               className={pathname === "/" ? "link" : "text-inherit"}
             >
-              Home
+              {t("home")}
             </Link>
           </div>
           <div>
@@ -65,7 +81,7 @@ const Header = () => {
               href={"/about"}
               className={pathname === "/about" ? "link" : "text-inherit"}
             >
-              About
+              {t("about")}
             </Link>
           </div>
           <div>
@@ -73,7 +89,7 @@ const Header = () => {
               href={"/contact"}
               className={pathname === "/contact" ? "link" : "text-inherit"}
             >
-              Contact Us
+              {t("contact")}
             </Link>
           </div>
           <div>
@@ -81,7 +97,7 @@ const Header = () => {
               href={"/blog"}
               className={pathname === "/blog" ? "link" : "text-inherit"}
             >
-              Blog
+              {t("blog")}
             </Link>
           </div>
         </div>
@@ -102,6 +118,18 @@ const Header = () => {
               <FiUser className="icon text-2xl cursor-pointer" />
             </div>
           </Link>
+          <div>
+            <select
+              name="language"
+              id="language"
+              value={i18n.language}
+              onChange={handleChangeLanguage}
+            >
+              <option value="en">EN</option>
+              <option value="az">AZ</option>
+              <option value="ru">RU</option>
+            </select>
+          </div>
         </div>
         {/* HAMBURGER MENU */}
         <div
@@ -139,7 +167,7 @@ const Header = () => {
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
             <Link className="text-gray-500" href={"#"}>
-              Phones
+              {t("phones")}
             </Link>
           </div>
           <div>
@@ -148,7 +176,7 @@ const Header = () => {
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
             <Link className="text-gray-500" href={"#"}>
-              Computers
+              {t("computers")}
             </Link>
           </div>
           <div>
@@ -157,7 +185,7 @@ const Header = () => {
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
             <Link className="text-gray-500" href={"#"}>
-              Smart Watches
+              {t("smartWatches")}
             </Link>
           </div>
           <div>
@@ -166,7 +194,7 @@ const Header = () => {
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
             <Link className="text-gray-500" href={"#"}>
-              Cameras
+              {t("cameras")}
             </Link>
           </div>
           <div>
@@ -175,7 +203,7 @@ const Header = () => {
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
             <Link className="text-gray-500" href={"#"}>
-              Headphones
+              {t("headphones")}
             </Link>
           </div>
           <div>
@@ -184,7 +212,7 @@ const Header = () => {
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
             <Link className="text-gray-500" href={"#"}>
-              Gaming
+              {t("gaming")}
             </Link>
           </div>
         </div>

@@ -1,18 +1,25 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import "./discountProducts.css";
 import { CiHeart } from "react-icons/ci";
 import { discountProducts } from "@/mock/discountData";
 import Link from "next/link";
 import { useCart } from "react-use-cart";
+import { useTranslation } from "react-i18next";
 const DiscountProducts = () => {
   const { addItem } = useCart();
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language");
+    i18n.changeLanguage(savedLanguage);
+  }, []);
   return (
     <section className="py-10">
       <div className="w-[75%] mx-auto py-2">
         <div className="categories text-[15px] pb-3">
           <span>
-            <p>Discounts up to -50%</p>
+            <p>{t("discount")}</p>
           </span>
         </div>
         <div className="flex flex-wrap gap-4 justify-center items-center">
@@ -45,7 +52,7 @@ const DiscountProducts = () => {
                   className="w-[130px] h-[40px] bg-black rounded-[8px] text-white p-3 hover:bg-slate-300 hover:text-black"
                   onClick={() => addItem(item)}
                 >
-                  Buy Now
+                  {t("buyNow")}
                 </button>
               </div>
             </div>
