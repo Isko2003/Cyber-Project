@@ -1,62 +1,80 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./register.css";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [formData, setFormData] = useState({
+    firstname: "",
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const router = useRouter();
 
-    setError("");
-    setSuccess("");
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-    const userData = {
-      name,
-      email,
-      password,
-    };
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
+  const handleSubmit = () => {
+    const isEmpty = Object.values(formData).some((value) => value === "");
+    if (isEmpty || formData.password.length < 9) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in all fields",
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.message || "Something went wrong");
-        return;
-      }
-
-      const data = await response.json();
-      setSuccess(data.message);
-    } catch (err) {
-      setError("Network error, please try again");
+      return;
     }
+
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const userExists = storedUsers.some(
+      (user) => user.email === formData.email
+    );
+    if (userExists) {
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text: "This email is already registered. Please use a different email.",
+      });
+      return;
+    }
+
+    storedUsers.push(formData);
+    localStorage.setItem("users", JSON.stringify(storedUsers));
+    Swal.fire({
+      title: "You Have Been Registered Successfully",
+      icon: "success",
+    }).then(() => {
+      setFormData({
+        firstname: "",
+        email: "",
+        password: "",
+      });
+      router.push("/login");
+    });
   };
 
   return (
     <div id="register-container">
       <h1 id="register-title">Register Form</h1>
 
-      <form id="register-form" onSubmit={handleSubmit}>
+      <form id="register-form">
         <div className="form-group" id="name-group">
-          <label htmlFor="name" className="form-label">
-            Name
+          <label htmlFor="firstname" className="form-label">
+            Firstname
           </label>
           <input
             type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="firstname"
+            id="firstname"
+            value={formData.firstname}
+            onChange={handleChange}
             className="form-input"
             required
           />
@@ -68,8 +86,9 @@ const Register = () => {
           <input
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             className="form-input"
             required
           />
@@ -81,27 +100,24 @@ const Register = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
             className="form-input"
             required
           />
         </div>
-        <button type="submit" id="register-btn" className="form-btn">
+        <button
+          id="register-btn"
+          className="form-btn"
+          onClick={(e) => {
+            e.preventDefault();
+            handleSubmit();
+          }}
+        >
           Register
         </button>
       </form>
-
-      {error && (
-        <p id="error-message" className="form-message error">
-          {error}
-        </p>
-      )}
-      {success && (
-        <p id="success-message" className="form-message success">
-          {success}
-        </p>
-      )}
     </div>
   );
 };

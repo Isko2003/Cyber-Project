@@ -92,14 +92,6 @@ const Header = () => {
               {t("contact")}
             </Link>
           </div>
-          <div>
-            <Link
-              href={"/blog"}
-              className={pathname === "/blog" ? "link" : "text-inherit"}
-            >
-              {t("blog")}
-            </Link>
-          </div>
         </div>
         <div className="icons flex gap-[10px] hidden lg:flex">
           <div>
@@ -150,9 +142,6 @@ const Header = () => {
             </Link>
             <Link href={"/contact"} onClick={toggleMenu} className="text-2xl">
               Contact Us
-            </Link>
-            <Link href={"/blog"} onClick={toggleMenu} className="text-2xl">
-              Blog
             </Link>
             <div className="icons flex gap-[20px]">
               <CiHeart className="icon text-3xl cursor-pointer" />

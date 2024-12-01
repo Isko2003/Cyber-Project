@@ -2,50 +2,36 @@
 import React, { useEffect, useState } from "react";
 import "./login.css";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const user = storedUsers.find(
+      (user) => user.email === email && user.password === password
+    );
 
-    setError("");
-    setSuccess("");
-
-    const loginData = {
-      email,
-      password,
-    };
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
+    if (user) {
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      Swal.fire({
+        icon: "success",
+        title: "Login Successfull!",
+      }).then(() => {
+        setEmail(""), setPassword("");
+        router.push("/");
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.message || "Something went wrong");
-        return;
-      }
-
-      const data = await response.json();
-      setSuccess(data.message);
-
-      localStorage.setItem("token", data.token);
-
-      router.push("/");
-
-    } catch (err) {
-      setError("Network error, please try again");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "Invalid email or password.",
+      });
     }
   };
 
@@ -61,6 +47,7 @@ const Login = () => {
           <input
             type="email"
             id="email"
+            name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="form-input"
@@ -74,27 +61,17 @@ const Login = () => {
           <input
             type="password"
             id="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="form-input"
             required
           />
         </div>
-        <button type="submit" id="login-btn" className="form-btn">
+        <button id="login-btn" className="form-btn" type="submit">
           Login
         </button>
       </form>
-
-      {error && (
-        <p id="error-message" className="form-message error">
-          {error}
-        </p>
-      )}
-      {success && (
-        <p id="success-message" className="form-message success">
-          {success}
-        </p>
-      )}
     </div>
   );
 };
