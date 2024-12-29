@@ -7,7 +7,6 @@ import BlackWatch from "../../public/imgs/blackWatch.png";
 import Notebook from "../../public/imgs/notebook.png";
 import IPhonePro from "../../public/imgs/IPhonePro.png";
 import GoldMacbook from "../../public/imgs/goldMacbook.png";
-import ThirdButton from "@/pages/ThirdButton";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 

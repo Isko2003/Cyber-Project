@@ -68,5 +68,9 @@
   "name": "Adınız",
   "message": "Mesaj",
   "submit": "Təqdim et",
-  "search": "Axtarış Edin"
+  "search": "Axtarış Edin",
+  "shoppingCart": "Səbət",
+  "cartEmpty": "Səbətiniz Boşdur",
+  "totalItems": "Ümumi",
+  "checkout": "Ödəniş"
 }

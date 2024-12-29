@@ -1,7 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import logo from "../../public/imgs/logo.png";
 import "./header.css";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Link from "next/link";
@@ -30,7 +28,6 @@ const Header = () => {
     if (savedLanguage) {
       i18n.changeLanguage(savedLanguage);
     }
-    
   }, [i18n]);
 
   const toggleMenu = () => {
@@ -48,12 +45,18 @@ const Header = () => {
       <div className="w-[100%] mx-auto h-[70px] pt-[20px] flex items-center justify-around header fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="logo">
           <Link href={"/"}>
-            <Image
+            {/* <Image
               unoptimized
               src={logo}
               alt="logo"
               className="logo cursor-pointer"
               width={70}
+            /> */}
+            <img
+              src="/imgs/logo.png"
+              alt="logo"
+              width={70}
+              className="logo cursor-pointer"
             />
           </Link>
         </div>
