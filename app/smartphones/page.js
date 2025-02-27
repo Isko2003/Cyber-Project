@@ -9,6 +9,7 @@ import { smartPhonesData } from "@/mock/smartphonesData";
 import samsungLogo from "../../public/imgs/samsungLogo.png";
 import appleLogo from "../../public/imgs/appleLogo.jpeg";
 import { useCart } from "react-use-cart";
+import { productData } from "@/mock/productData";
 
 const smartphones = () => {
   const [minPrice, setMinPrice] = useState("");
@@ -19,6 +20,26 @@ const smartphones = () => {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [showBrandMenu, setShowBrandMenu] = useState(false);
   const { addItem } = useCart();
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  const handleAddToCart = (product) => {
+    if (!user) return;
+
+    const cartKey = `cart_${user.firstname}`;
+    let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    const existingProduct = cart.find((item) => item.id === product.id);
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
 
   const handleMinPrice = (e) => {
     setMinPrice(e.target.value);
@@ -202,15 +223,15 @@ const smartphones = () => {
                   <div className="w-[230px] flex justify-center">
                     <p>${item.price}</p>
                   </div>
-                    </Link>
-                  <div className="align-bottom flex justify-center">
-                    <button
-                      className="w-[130px] h-[40px] bg-black rounded-[8px] text-white p-3 hover:bg-slate-300 hover:text-black"
-                      onClick={() => addItem(item)}
-                    >
-                      Buy Now
-                    </button>
-                  </div>
+                </Link>
+                <div className="align-bottom flex justify-center">
+                  <button
+                    className="w-[130px] h-[40px] bg-black rounded-[8px] text-white p-3 hover:bg-slate-300 hover:text-black"
+                    onClick={() => handleAddToCart(item)}
+                  >
+                    Buy Now
+                  </button>
+                </div>
               </div>
             ))
           ) : (

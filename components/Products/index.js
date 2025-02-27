@@ -9,11 +9,27 @@ import { useTranslation } from "react-i18next";
 const ProductsList = () => {
   const { addItem } = useCart();
   const { t, i18n } = useTranslation();
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
     i18n.changeLanguage(savedLanguage);
   }, []);
+
+  const handleAddToCart = (product) => {
+    if (!user) return;
+    const cart =
+      JSON.parse(localStorage.getItem(`cart_${user.firstname}`)) || [];
+    const existingProduct = cart.find((item) => item.id === product.id);
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem(`cart_${user.firstname}`, JSON.stringify(cart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
   return (
     <section className="py-10">
       <div className="w-[75%] mx-auto py-2">
@@ -32,7 +48,7 @@ const ProductsList = () => {
         <div className="flex flex-wrap gap-4 justify-center items-center">
           {productData.map((item, index) => (
             <div
-              className="relative bg-gray-200 rounded-[8px] p-1 h-[270px]"
+              className="relative bg-gray-200 rounded-[8px] p-1 h-[300px]"
               key={index}
             >
               <Link href={`/product/${item.id}`} passHref>
@@ -45,19 +61,20 @@ const ProductsList = () => {
                     alt={item.title.slice(0, 6)}
                     width={120}
                     height={140}
+                    className="py-5"
                   />
                 </div>
-                <div className="w-[230px] h-[50px] flex justify-center items-center text-center">
+                <div className="w-[230px] h-[35px] flex justify-center items-center text-center">
                   <p className="truncate">{item.title}</p>
                 </div>
-                <div className="w-[230px] flex justify-center">
+                <div className="w-[230px] flex justify-center py-2">
                   <p>${item.price}</p>
                 </div>
               </Link>
               <div className="align-bottom flex justify-center">
                 <button
                   className="w-[130px] h-[40px] bg-black rounded-[8px] text-white p-3 hover:bg-slate-300 hover:text-black"
-                  onClick={() => addItem(item)}
+                  onClick={() => handleAddToCart(item)}
                 >
                   {t("buyNow")}
                 </button>

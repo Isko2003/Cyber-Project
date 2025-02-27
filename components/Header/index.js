@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { StrictMode, useEffect, useState } from "react";
 import "./header.css";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Link from "next/link";
@@ -16,6 +16,7 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
   const { t, i18n } = useTranslation();
+  const [cart, setCart] = useState([]);
 
   const handleChangeLanguage = (event) => {
     const selectedLang = event.target.value;
@@ -34,15 +35,33 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const { totalUniqueItems } = useCart();
+  useEffect(() => {
+    const updateCart = () => {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      if (user) {
+        const storedCart =
+          JSON.parse(localStorage.getItem(`cart_${user.firstname}`)) || [];
+        setCart(storedCart);
+      }
+    };
+
+    updateCart();
+
+    window.addEventListener("cartUpdated", updateCart);
+
+    return () => {
+      window.removeEventListener("cartUpdated", updateCart);
+    };
+  }, []);
 
   useEffect(() => {
-    setTotalItems(totalUniqueItems);
-  }, [totalUniqueItems]);
+    setTotalItems(cart.length);
+  }, [cart]);
 
   return (
     <div className="pt-[70px] bg-white">
-      <div className="w-[100%] mx-auto h-[70px] pt-[20px] flex items-center justify-around header fixed top-0 left-0 right-0 z-50 bg-white">
+      <div className="w-[100%] mx-auto h-[70px] pt-[20px] flex items-center justify-evenly header fixed top-0 left-0 right-0 z-50 bg-white">
         <div className="logo">
           <Link href={"/"}>
             {/* <Image
@@ -155,10 +174,10 @@ const Header = () => {
         )}
       </div>
       <section className="subnav">
-        <div className="w-[75%] mx-auto flex items-center justify-around h-[40px]">
+        <div className="w-[85%] mx-auto flex items-center justify-evenly h-[40px]">
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
-            <Link className="text-gray-500" href={"#"}>
+            <Link className="text-gray-500" href={"/phones"}>
               {t("phones")}
             </Link>
           </div>
@@ -167,7 +186,7 @@ const Header = () => {
           </div>
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
-            <Link className="text-gray-500" href={"#"}>
+            <Link className="text-gray-500" href={"/computers"}>
               {t("computers")}
             </Link>
           </div>
@@ -176,7 +195,7 @@ const Header = () => {
           </div>
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
-            <Link className="text-gray-500" href={"#"}>
+            <Link className="text-gray-500" href={"/smart-watches"}>
               {t("smartWatches")}
             </Link>
           </div>
@@ -185,7 +204,7 @@ const Header = () => {
           </div>
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
-            <Link className="text-gray-500" href={"#"}>
+            <Link className="text-gray-500" href={"/cameras"}>
               {t("cameras")}
             </Link>
           </div>
@@ -194,7 +213,7 @@ const Header = () => {
           </div>
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
-            <Link className="text-gray-500" href={"#"}>
+            <Link className="text-gray-500" href={"/headphones"}>
               {t("headphones")}
             </Link>
           </div>
@@ -203,7 +222,7 @@ const Header = () => {
           </div>
           <div className="flex items-center">
             <IoMdPhonePortrait className="text-gray-500" />
-            <Link className="text-gray-500" href={"#"}>
+            <Link className="text-gray-500" href={"/gaming"}>
               {t("gaming")}
             </Link>
           </div>

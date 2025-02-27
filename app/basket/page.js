@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 
 const Page = () => {
   const { t, i18n } = useTranslation();
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language");
@@ -16,8 +17,53 @@ const Page = () => {
     }
   }, [i18n]);
 
-  const { isEmpty, items, totalUniqueItems, removeItem, updateItemQuantity } =
-    useCart();
+  // const { isEmpty, items, totalUniqueItems, removeItem, updateItemQuantity } =
+  //   useCart();
+
+  const increaseQuantity = (id) => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!user) return;
+
+    const updatedCart = cart.map((item) =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    );
+
+    setCart(updatedCart);
+    localStorage.setItem(`cart_${user.firstname}`, JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const decreaseQuantity = (id) => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!user) return;
+    const updatedCart = cart
+      .map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+      )
+      .filter((item) => item.quantity > 0);
+    setCart(updatedCart);
+    localStorage.setItem(`cart_${user.firstname}`, JSON.stringify(updatedCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const removeItem = (id) => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (!user) return;
+    const filteredCart = cart.filter((item) => item.id !== id);
+    setCart(filteredCart);
+    localStorage.setItem(`cart_${user.firstname}`, JSON.stringify(filteredCart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (user) {
+      const storedCart =
+        JSON.parse(localStorage.getItem(`cart_${user.firstname}`)) || [];
+      setCart(storedCart);
+    }
+  }, []);
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -25,7 +71,7 @@ const Page = () => {
     setIsHydrated(true);
   }, []);
 
-  const resolvedItems = items.map((item) => ({
+  const resolvedItems = cart.map((item) => ({
     ...item,
     img:
       typeof item.img === "string"
@@ -43,7 +89,7 @@ const Page = () => {
     );
   }
 
-  if (isEmpty) {
+  if (cart.length === 0) {
     return (
       <div className="text-center p-10">
         <h2 className="text-2xl font-semibold">{t("cartEmpty")}</h2>
@@ -53,7 +99,9 @@ const Page = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-bold text-center mb-8">{t("shoppingCart")}</h2>
+      <h2 className="text-3xl font-bold text-center mb-8">
+        {t("shoppingCart")}
+      </h2>
 
       <div className="space-y-8">
         {resolvedItems.map((item) => (
@@ -76,14 +124,14 @@ const Page = () => {
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                  onClick={() => decreaseQuantity(item.id)}
                   className="text-xl text-gray-500 hover:text-gray-700"
                 >
                   <FaMinusCircle />
                 </button>
                 <span className="text-lg">{item.quantity}</span>
                 <button
-                  onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                  onClick={() => increaseQuantity(item.id)}
                   className="text-xl text-gray-500 hover:text-gray-700"
                 >
                   <FaPlusCircle />
@@ -108,9 +156,9 @@ const Page = () => {
 
       <div className="flex justify-between items-center mt-10 border-t pt-6">
         <div>
-          <h3 className="text-xl font-semibold">
+          {/* <h3 className="text-xl font-semibold">
             {t("totalItems")}: {totalUniqueItems}
-          </h3>
+          </h3> */}
         </div>
         <div className="flex items-center space-x-4">
           <button className="bg-blue-500 text-white px-6 py-2 rounded-md text-lg hover:bg-blue-600">

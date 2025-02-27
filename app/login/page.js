@@ -26,6 +26,7 @@ const Login = () => {
         setEmail(""), setPassword("");
         router.push("/");
       });
+      window.dispatchEvent(new Event("cartUpdated"));
     } else {
       Swal.fire({
         icon: "error",

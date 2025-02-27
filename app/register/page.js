@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./register.css";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,8 @@ const Register = () => {
     password: "",
   });
 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const router = useRouter();
 
   const handleChange = (event) => {
@@ -21,53 +23,48 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = () => {
-    const isEmpty = Object.values(formData).some((value) => value === "");
-    if (isEmpty || formData.password.length < 9) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (
+      !formData.firstname ||
+      !formData.email ||
+      formData.password.length < 9
+    ) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Please fill in all fields",
+        text: "Please fill in all fields and ensure the password is at least 9 characters long!",
       });
       return;
     }
+    
+    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
 
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const userExists = storedUsers.some(
-      (user) => user.email === formData.email
-    );
-    if (userExists) {
-      Swal.fire({
-        icon: "error",
-        title: "Registration Failed",
-        text: "This email is already registered. Please use a different email.",
-      });
-      return;
-    }
+    existingUsers.push(formData);
 
-    storedUsers.push(formData);
-    localStorage.setItem("users", JSON.stringify(storedUsers));
+    localStorage.setItem("users", JSON.stringify(existingUsers));
+
     Swal.fire({
-      title: "You Have Been Registered Successfully",
+      title: "Registration Successful!",
+      text: "You can now log in.",
       icon: "success",
     }).then(() => {
-      setFormData({
-        firstname: "",
-        email: "",
-        password: "",
-      });
       router.push("/login");
     });
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   return (
     <div id="register-container">
-      <h1 id="register-title">Register Form</h1>
+      <h1 id="register-title">Registration Form</h1>
 
-      <form id="register-form">
-        <div className="form-group" id="name-group">
+      <form id="register-form" onSubmit={handleSubmit}>
+        <div className="form-group">
           <label htmlFor="firstname" className="form-label">
-            Firstname
+            First Name
           </label>
           <input
             type="text"
@@ -79,45 +76,52 @@ const Register = () => {
             required
           />
         </div>
-        <div className="form-group" id="email-group">
+
+        <div className="form-group">
           <label htmlFor="email" className="form-label">
             Email
           </label>
           <input
             type="email"
-            id="email"
             name="email"
+            id="email"
             value={formData.email}
             onChange={handleChange}
             className="form-input"
             required
           />
         </div>
-        <div className="form-group" id="password-group">
+
+        <div className="form-group">
           <label htmlFor="password" className="form-label">
             Password
           </label>
           <input
             type="password"
-            id="password"
             name="password"
+            id="password"
             value={formData.password}
             onChange={handleChange}
             className="form-input"
             required
           />
         </div>
-        <button
-          id="register-btn"
-          className="form-btn"
-          onClick={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
+
+        <button type="submit" id="register-btn" className="form-btn">
           Register
         </button>
       </form>
+
+      {error && (
+        <p id="error-message" className="form-message error">
+          {error}
+        </p>
+      )}
+      {success && (
+        <p id="success-message" className="form-message success">
+          {success}
+        </p>
+      )}
     </div>
   );
 };

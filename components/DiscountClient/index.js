@@ -5,9 +5,21 @@ import { useCart } from "react-use-cart";
 
 const DiscountClient = ({ product }) => {
   const { addItem } = useCart();
+  const user = JSON.parse(localStorage.getItem("loggedInUser"));
 
   const handleAddToCart = () => {
-    addItem(product);
+    // addItem(product);
+    if (!user) return;
+    const cart =
+      JSON.parse(localStorage.getItem(`cart_${user.firstname}`)) || [];
+    const existingProduct = cart.find((item) => item.id === product.id);
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+    localStorage.setItem(`cart_${user.firstname}`, JSON.stringify(cart));
+    window.dispatchEvent(new Event("cartUpdated"));
   };
   return (
     <div className="product-detail-container">

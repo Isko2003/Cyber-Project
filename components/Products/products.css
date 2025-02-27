@@ -1,3 +1,4 @@
 .product-img img {
-  height: 140px !important;
+  height: 160px !important;
+  object-fit: cover;
 }
