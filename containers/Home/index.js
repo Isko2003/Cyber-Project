@@ -6,7 +6,7 @@ import PopularProducts from "@/components/PopularProducts";
 import ProductsList from "@/components/Products";
 import SmallerBanners from "@/components/SmallerBanners";
 import SummerSale from "@/components/SummerSale";
-import React, { useEffect } from "react";
+import React from "react";
 
 const index = () => {
   return (

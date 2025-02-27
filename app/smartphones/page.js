@@ -1,6 +1,6 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumb/breadcrumb";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./smartphones.css";
 import { CiHeart } from "react-icons/ci";
 import Link from "next/link";
@@ -20,9 +20,17 @@ const smartphones = () => {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [showBrandMenu, setShowBrandMenu] = useState(false);
   const { addItem } = useCart();
-  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      setUser(loggedInUser);
+    }
+  }, []);
 
   const handleAddToCart = (product) => {
+    if (typeof window === "undefined") return;
     if (!user) return;
 
     const cartKey = `cart_${user.firstname}`;

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./discountProducts.css";
 import { CiHeart } from "react-icons/ci";
 import { discountProducts } from "@/mock/discountData";
@@ -9,11 +9,15 @@ import { useTranslation } from "react-i18next";
 const DiscountProducts = () => {
   const { addItem } = useCart();
   const { t, i18n } = useTranslation();
-  const user = JSON.parse(localStorage.getItem("loggedInUser"));
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const savedLanguage = localStorage.getItem("language");
-    i18n.changeLanguage(savedLanguage);
+    if (typeof window !== "undefined") {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      setUser(loggedInUser);
+      const savedLanguage = localStorage.getItem("language");
+      i18n.changeLanguage(savedLanguage);
+    }
   }, []);
 
   const handleAddToCart = (product) => {
